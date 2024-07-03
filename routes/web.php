@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('category/{slug}', [App\Http\Controllers\HomeController::class, 'category'])->name('category');
+Route::get('download/{image}', [App\Http\Controllers\HomeController::class, 'download'])->name('download');
+Route::get('search', [App\Http\Controllers\HomeController::class, 'search'])->name('search');
 
 Route::prefix('admin')->group(function () {
     Route::get('login', [App\Http\Controllers\Admin\LoginController::class, 'showLoginForm'])->name('admin.login');

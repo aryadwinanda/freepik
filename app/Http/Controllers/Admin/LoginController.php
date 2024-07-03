@@ -31,7 +31,7 @@ class LoginController extends Controller
             return redirect()->route('admin.home.index');
         }
 
-        flash('Email atau password salah')->error();
+        flash('Email atau password salah', 'danger');
     }
 
     // logout

@@ -27,7 +27,7 @@
                         <div class="mb-3">
                             <label for="file" class="form-label">Pilih Gambar</label>
                             <input class="form-control" type="file" id="file" name="file" required>
-                          </div>
+                        </div>
                         <div class="mb-3">
                             <label for="title" class="form-label">Judul</label>
                             <input type="text" class="form-control" id="title" name="title" required />

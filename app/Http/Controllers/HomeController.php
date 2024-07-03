@@ -25,4 +25,30 @@ class HomeController extends Controller
             'images' => $images
         ]);
     }
+
+    public function search(Request $request)
+    {
+        $keyword = $request->keyword;
+
+        // filter title or keywords from images
+        $images = Image::where('title', 'like', '%' . $keyword . '%')
+            ->orWhere('keywords', 'like', '%' . $keyword . '%')
+            ->get();
+
+        return view('search', [
+            'keyword' => $keyword,
+            'images' => $images
+        ]);
+    }
+
+    public function download(Image $image)
+    {
+        $imagePath = public_path('storage/uploads/' . $image->file);
+
+        if (file_exists($imagePath)) {
+            return response()->download($imagePath, $image->file);
+        } else {
+            abort(404, 'File not found');
+        }
+    }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class CategoryController extends Controller
@@ -25,13 +26,21 @@ class CategoryController extends Controller
     public function store()
     {
         $data = request()->validate([
-            'name' => 'required|unique:categories,name'
+            'file' => 'required|image',
+            'name' => 'required|unique:categories,name',
         ], [
+            'file.required' => 'File harus diisi',
             'name.required' => 'Nama kategori harus diisi',
             'name.unique' => 'Nama kategori sudah ada'
         ]);
 
+        $imagePath = Storage::disk('public')->put('uploads/categories', request('file'));
+        
+        // get file name and extension
+        $imageFileName = pathinfo($imagePath, PATHINFO_FILENAME) . '.' . pathinfo($imagePath, PATHINFO_EXTENSION);
+
         $save = Category::create([
+            'cover' => $imageFileName,
             'name' => $data['name'],
             'slug' => Str::slug($data['name']),
             'status' => 'active',
@@ -56,13 +65,31 @@ class CategoryController extends Controller
     public function update($id)
     {
         $data = request()->validate([
+            'file' => 'image',
             'name' => 'required|unique:categories,name,' . $id
         ], [
+            'file.image' => 'File harus berupa gambar',
             'name.required' => 'Nama kategori harus diisi',
             'name.unique' => 'Nama kategori sudah ada'
         ]);
 
         $category = Category::findOrFail($id);
+        $categoryCover = $category->cover;
+        $categoryCoverPath = "uploads/categories/".$categoryCover;
+
+        if (request()->hasFile('file')) {
+            if ($category->cover != null) {
+                Storage::disk('public')->delete($categoryCoverPath);
+            }
+            
+            $imagePath = Storage::disk('public')->put('uploads/categories', request('file'));
+            
+            // get file name and extension
+            $categoryCover = pathinfo($imagePath, PATHINFO_FILENAME) . '.' . pathinfo($imagePath, PATHINFO_EXTENSION);
+        }
+
+        $category = Category::findOrFail($id);
+        $category->cover = $categoryCover;
         $category->name = $data['name'];
         $category->slug = Str::slug($data['name']);
         $category->status = 'active';
