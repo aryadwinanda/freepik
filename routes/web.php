@@ -15,12 +15,7 @@ Route::get('download/{image}', [App\Http\Controllers\HomeController::class, 'dow
 Route::get('search', [App\Http\Controllers\HomeController::class, 'search'])->name('search');
 
 Route::prefix('admin')->group(function () {
-    Route::get('login', [App\Http\Controllers\Admin\LoginController::class, 'showLoginForm'])->name('admin.login');
-    Route::post('login', [App\Http\Controllers\Admin\LoginController::class, 'login'])->name('admin.login.post');
-
     Route::middleware([AdminMiddleware::class])->group(function () {
-        Route::get('logout', [App\Http\Controllers\Admin\LoginController::class, 'logout'])->name('admin.logout');
-
         Route::get('/', [App\Http\Controllers\Admin\HomeController::class, 'index'])->name('admin.home.index');
 
         Route::get('category', [App\Http\Controllers\Admin\CategoryController::class, 'index'])->name('admin.category.index');

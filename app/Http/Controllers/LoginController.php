@@ -9,9 +9,7 @@ class LoginController extends Controller
     public function index()
     {
         if (auth()->guard('web')->check()) {
-            if (auth()->user()->role === 'admin') {
-                return redirect()->route('admin.home.index');
-            }
+            return redirect()->route('home');
         }
 
         return view('login');
@@ -32,9 +30,8 @@ class LoginController extends Controller
         if (auth()->guard('web')->attempt([
             'email' => $data['email'],
             'password' => $data['password'],
-            'role' => 'user'
         ])) {
-            return redirect()->route('home.index');
+            return redirect()->route("home");
         }
 
         flash('Email atau password salah', 'danger');

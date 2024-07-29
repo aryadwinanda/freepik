@@ -16,13 +16,21 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
-                        <li class="nav-item">
-                            @if (auth()->check() && auth()->user()->role === 'user')
-                            <a class="nav-link" aria-current="page" href="{{ route("logout") }}">Logout</a>
-                            @else
-                            <a class="nav-link" aria-current="page" href="{{ route("login") }}">Login</a>
+                        @if(auth()->check())
+                            @if(auth()->user()->role === 'admin')
+                                <li class="nav-item">
+                                    <a class="nav-link" target="blank" aria-current="page" href="{{ route("admin.home.index") }}">Halaman Admin</a>
+                                </li>
                             @endif
+
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" href="{{ route("logout") }}">Logout</a>
+                            </li>
+                        @else
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="{{ route("login") }}">Login</a>
                         </li>
+                        @endif
                     </ul>
                 </div>
             </div>
