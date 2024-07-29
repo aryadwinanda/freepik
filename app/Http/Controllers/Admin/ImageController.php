@@ -37,7 +37,7 @@ class ImageController extends Controller
             'color' => 'required',
             'description' => 'required',
             'keywords' => 'required',
-            'file' => 'required|image'
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ], [
             'title.required' => 'Judul harus diisi',
             'category_id.required' => 'Kategori harus diisi',
@@ -88,7 +88,7 @@ class ImageController extends Controller
             'color' => 'required',
             'description' => 'required',
             'keywords' => 'required',
-            'file' => 'image'
+            'file' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ], [
             'title.required' => 'Judul harus diisi',
             'category_id.required' => 'Kategori harus diisi',
