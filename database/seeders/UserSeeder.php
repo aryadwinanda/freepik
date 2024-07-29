@@ -13,19 +13,37 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        // check if user 'admin' already exists
-        if (User::where('email', 'admin@example.com')->doesntExist()) {
+        $email = 'admin@mail.com';
+        
+        if (User::where('email', $email)->doesntExist()) {
             User::create([
                 'name' => 'Admin',
-                'email' => 'admin@example.com',
+                'email' => $email,
                 'password' => bcrypt('password'),
                 'role' => 'admin',
             ]);
         } else {
-            $user = User::where('email', 'admin@example.com')->first();
+            $user = User::where('email', $email)->first();
             $user->update([
                 'password' => bcrypt('password'),
                 'role' => 'admin',
+            ]);
+        }
+
+        $email = 'user@mail.com';
+        
+        if (User::where('email', $email)->doesntExist()) {
+            User::create([
+                'name' => 'User',
+                'email' => $email,
+                'password' => bcrypt('password'),
+                'role' => 'user',
+            ]);
+        } else {
+            $user = User::where('email', $email)->first();
+            $user->update([
+                'password' => bcrypt('password'),
+                'role' => 'user',
             ]);
         }
     }

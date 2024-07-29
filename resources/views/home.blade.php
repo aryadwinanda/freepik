@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
-{{-- <div class="input-group mb-3">
-    <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2">
-    <button class="btn btn-outline-secondary" type="button" id="button-addon2">Button</button>
-  </div> --}}
-
 @section('content')
     <div class="container">
+        @if (flash()->message)
+            <div class="alert alert-{{ flash()->class }}">
+                {{ flash()->message }}
+            </div>
+        @endif
         <div class="p-5 mb-4 rounded-3 shadow-sm border bg-hero">
             <div class="container-fluid py-5">
                 <h1 class="display-5 fw-bold mb-4">Free Image</h1>

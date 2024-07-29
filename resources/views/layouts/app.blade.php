@@ -14,16 +14,17 @@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                {{-- <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="{{ route('home') }}">Beranda</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" aria-current="page" href="{{ route('home') }}">Beranda</a>
+                            @if (auth()->check() && auth()->user()->role === 'user')
+                            <a class="nav-link" aria-current="page" href="{{ route("logout") }}">Logout</a>
+                            @else
+                            <a class="nav-link" aria-current="page" href="{{ route("login") }}">Login</a>
+                            @endif
                         </li>
                     </ul>
-                </div> --}}
+                </div>
             </div>
         </nav>
 

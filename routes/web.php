@@ -4,6 +4,12 @@ use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('login', [App\Http\Controllers\LoginController::class, 'index'])->name('login');
+Route::post('login', [App\Http\Controllers\LoginController::class, 'login'])->name('login.post');
+// logout
+Route::get('logout', [App\Http\Controllers\LoginController::class, 'logout'])->name('logout');
+
 Route::get('category/{slug}', [App\Http\Controllers\HomeController::class, 'category'])->name('category');
 Route::get('download/{image}', [App\Http\Controllers\HomeController::class, 'download'])->name('download');
 Route::get('search', [App\Http\Controllers\HomeController::class, 'search'])->name('search');
