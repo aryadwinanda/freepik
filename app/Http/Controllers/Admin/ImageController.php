@@ -71,7 +71,7 @@ class ImageController extends Controller
             $process->run();
             $output = $process->getOutput();
 
-            $output = str_replace(array("\r\n", "\r", "\n"), '', $output);
+            // $output = str_replace(array("\r\n", "\r", "\n"), '', $output);
             $arrOutput = explode('//', $output);
 
             $image = Image::find($save->id);
