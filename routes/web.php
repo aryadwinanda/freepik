@@ -15,6 +15,8 @@ Route::get('logout', [App\Http\Controllers\LoginController::class, 'logout'])->n
 Route::get('category/{slug}', [App\Http\Controllers\HomeController::class, 'category'])->name('category');
 Route::get('download/{image}', [App\Http\Controllers\HomeController::class, 'download'])->name('download');
 Route::get('search', [App\Http\Controllers\HomeController::class, 'search'])->name('search');
+Route::post('like', [App\Http\Controllers\HomeController::class, 'like'])->name('like');
+Route::get('favourite', [App\Http\Controllers\FavouriteController::class, 'index'])->name('favourite')->middleware('auth');
 
 Route::prefix('admin')->group(function () {
     Route::middleware([AdminMiddleware::class])->group(function () {

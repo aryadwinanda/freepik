@@ -3,6 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
         <title>Free Images</title>
         <link rel="stylesheet" href="{{ asset('assets/bootstrap-5.3.3/css/bootstrap.min.css') }}" />
         <link rel="stylesheet" href="{{ asset('assets/css/styles.css') }}" />
@@ -20,6 +21,10 @@
                             @if(auth()->user()->role === 'admin')
                                 <li class="nav-item">
                                     <a class="nav-link" target="blank" aria-current="page" href="{{ route("admin.home.index") }}">Halaman Admin</a>
+                                </li>
+                            @else
+                                <li class="nav-item">
+                                    <a class="nav-link" aria-current="page" href="{{ route("favourite") }}">Favorit</a>
                                 </li>
                             @endif
 
@@ -40,6 +45,8 @@
             @yield('content')
         </div>
 
+        <script src="{{ asset('assets/jquery.js') }}"></script>
         <script src="{{ asset('assets/bootstrap-5.3.3/js/bootstrap.bundle.min.js') }}"></script>
+        @stack('scripts')
     </body>
 </html>
