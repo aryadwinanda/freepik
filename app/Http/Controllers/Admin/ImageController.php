@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\Process\Process;
 
 class ImageController extends Controller
 {
@@ -63,6 +64,23 @@ class ImageController extends Controller
         ]);
 
         if ($save) {
+            $scriptPath = public_path('scripts/color_detect.py');
+            $imagePath = public_path('storage/uploads/' . $imageFileName);
+
+            $pythonPath = "C:\Users\Arya\AppData\Local\Programs\Python\Python312\python.exe";
+            $command = [$pythonPath, $scriptPath, "-i", $imagePath];
+            $process = new Process($command);
+            $process->run();
+            $output = $process->getOutput();
+
+            $output = str_replace(array("\r\n", "\r", "\n"), '', $output);
+            $arrOutput = explode('//', $output);
+
+            $image = Image::find($save->id);
+            $image->color = $arrOutput[0];
+            $image->color_rgb = $arrOutput[1];
+            $image->save();
+
             flash('Berhasil menambahkan gambar', 'success');
             return redirect()->route('admin.image.index');
         }
