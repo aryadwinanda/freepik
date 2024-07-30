@@ -36,6 +36,7 @@
                                     </svg>
                                 </a>
                             </div>
+                            <p style="font-size: 12px; margin: 0;">{{ $i->color }}</p>
                         </div>
                     </div>
                 </div>
