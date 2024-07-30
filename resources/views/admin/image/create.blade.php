@@ -41,10 +41,10 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="mb-3">
+                        <?php /*<div class="mb-3">
                             <label for="color" class="form-label">Warna</label>
                             <input type="text" class="form-control" id="color" name="color" required />
-                        </div>
+                        </div>*/ ?>
                         <div class="mb-3">
                             <label for="description" class="form-label">Deskripsi</label>
                             <input type="text" class="form-control" id="description" name="description" required />

@@ -35,14 +35,12 @@ class ImageController extends Controller
         $data = request()->validate([
             'title' => 'required',
             'category_id' => 'required',
-            'color' => 'required',
             'description' => 'required',
             'keywords' => 'required',
             'file' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
         ], [
             'title.required' => 'Judul harus diisi',
             'category_id.required' => 'Kategori harus diisi',
-            'color.required' => 'Warna harus diisi',
             'description.required' => 'Deskripsi harus diisi',
             'keywords.required' => 'Keywords harus diisi',
             'file.required' => 'File harus diisi',
@@ -57,7 +55,7 @@ class ImageController extends Controller
         $save = Image::create([
             'title' => $data['title'],
             'category_id' => $data['category_id'],
-            'color' => $data['color'] ?? null,
+            'color' => null,
             'description' => $data['description'] ?? null,
             'keywords' => $data['keywords'] ?? null,
             'file' => $imageFileName
@@ -67,7 +65,7 @@ class ImageController extends Controller
             $scriptPath = public_path('scripts/color_detect.py');
             $imagePath = public_path('storage/uploads/' . $imageFileName);
 
-            $pythonPath = "C:\Users\Arya\AppData\Local\Programs\Python\Python312\python.exe";
+            $pythonPath = env('PYTHON_PATH');
             $command = [$pythonPath, $scriptPath, "-i", $imagePath];
             $process = new Process($command);
             $process->run();
