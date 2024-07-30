@@ -22,6 +22,7 @@
                             <tr>
                                 <th>Judul</th>
                                 <th>Kategori</th>
+                                <th>Warna</th>
                                 <th width="15%">Dibuat</th>
                                 <th width="15%">Diubah</th>
                                 <th width="10%">Opsi</th>
@@ -32,6 +33,7 @@
                                 <tr>
                                     <td>{{ $c->title }}</td>
                                     <td>{{ $c->category->name }}</td>
+                                    <td>{{ $c->color }}</td>
                                     <td class="text-center">
                                         @if($c->status == 'active')
                                             <span class="badge bg-success">Aktif</span>
