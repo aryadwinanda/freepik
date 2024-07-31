@@ -7,7 +7,9 @@ use App\Models\FavouriteImage;
 use App\Models\Image;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\Process\Process;
 
 class HomeController extends Controller
 {
@@ -19,28 +21,56 @@ class HomeController extends Controller
         ]);
     }
 
-    public function category($slug)
+    public function category(Request $request, $slug)
     {
+        $color = $request->color;
+        $img_search = $request->img_search;
+
+        if ($img_search) {
+            $img_search = asset('storage/uploads/temp/' . $img_search);
+        } else {
+            $img_search = "#";
+        }
+
         $category = Category::where('slug', $slug)->first();
-        $images = Image::where('category_id', $category->id)->get();
+
+        $images = Image::where('category_id', $category->id)
+            ->when($color, function ($query) use ($color) {
+                return $query->where('color', $color);
+            })
+            ->get();
+
         return view('category', [
             'category' => $category,
-            'images' => $images
+            'images' => $images,
+            'img_search' => $img_search
         ]);
     }
 
     public function search(Request $request)
     {
         $keyword = $request->keyword;
+        $color = $request->color;
+        $img_search = $request->img_search;
+
+        if ($img_search) {
+            $img_search = asset('storage/uploads/temp/' . $img_search);
+        } else {
+            $img_search = "#";
+        }
 
         // filter title or keywords from images
         $images = Image::where('title', 'like', '%' . $keyword . '%')
             ->orWhere('keywords', 'like', '%' . $keyword . '%')
+            ->when($color, function ($query) use ($color) {
+                return $query->where('color', $color);
+            })
             ->get();
 
         return view('search', [
             'keyword' => $keyword,
-            'images' => $images
+            'images' => $images,
+            'img_search' => $img_search
         ]);
     }
 
@@ -107,6 +137,32 @@ class HomeController extends Controller
         return response()->json([
             'status' => 'success',
             'message' => 'Gambar ditambahkan ke daftar favorit',
+        ]);
+    }
+
+    public function uploadImage(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $imagePath = Storage::disk('public')->put('uploads/temp', request('file'));
+        $imageFileName = pathinfo($imagePath, PATHINFO_FILENAME) . '.' . pathinfo($imagePath, PATHINFO_EXTENSION);
+
+        $scriptPath = public_path('scripts/color_detect.py');
+        $imagePath = public_path('storage/uploads/temp/' . $imageFileName);
+
+        $pythonPath = env('PYTHON_PATH');
+        $command = [$pythonPath, $scriptPath, "-i", $imagePath];
+        $process = new Process($command);
+        $process->run();
+        $output = $process->getOutput();
+
+        $arrOutput = explode('//', $output);
+
+        return response()->json([
+            'img_search' => $imageFileName,
+            'color' => $arrOutput[0],
         ]);
     }
 }

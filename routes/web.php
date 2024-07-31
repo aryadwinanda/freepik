@@ -17,6 +17,7 @@ Route::get('download/{image}', [App\Http\Controllers\HomeController::class, 'dow
 Route::get('search', [App\Http\Controllers\HomeController::class, 'search'])->name('search');
 Route::post('like', [App\Http\Controllers\HomeController::class, 'like'])->name('like');
 Route::get('favourite', [App\Http\Controllers\FavouriteController::class, 'index'])->name('favourite')->middleware('auth');
+Route::post('upload', [App\Http\Controllers\HomeController::class, 'uploadImage'])->name('uploadImage');
 
 Route::prefix('admin')->group(function () {
     Route::middleware([AdminMiddleware::class])->group(function () {

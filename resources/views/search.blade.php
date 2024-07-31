@@ -11,6 +11,20 @@
             </ol>
         </nav>
 
+        <div class="row">
+            <div class="col-12 col-md-6">
+                <form method="POST" id="uploadForm" enctype="multipart/form-data" autocomplete="off">
+                    <div class="mb-3">
+                        <img id="preview" src="{{ $img_search }}" alt="Pratinjau Gambar" style="max-width:200px; max-height:200px;" />
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="file" class="form-control" required name="file" id="file" accept="image/*" onchange="previewImage(event)" />
+                        <button id="btnSearch" class="btn btn-outline-secondary" type="submit">Cari</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         @if ($images->isEmpty())
             <div class="alert alert-warning" role="alert">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-info-circle me-2" viewBox="0 0 16 16">
@@ -59,6 +73,20 @@
             }
         });
 
+        @if($img_search == "#")
+            document.getElementById('preview').style.display = 'none';
+        @endif
+
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function(){
+                var output = document.getElementById('preview');
+                output.src = reader.result;
+                output.style.display = 'block';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
         function doLike(id) {
             $.ajax({
                 url: '{{ route('like') }}',
@@ -81,5 +109,35 @@
                 }
             });
         }
+
+        $(document).ready(function () {
+            $('#uploadForm').on('submit', function (e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+
+                $.ajax({
+                    url: "{{ route('uploadImage') }}",
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    beforeSend: function () {
+                        $("#btnSearch").prop('disabled', true);
+                    },
+                    success: function (response) {
+                        var img_search = response.img_search;
+                        var color = response.color;
+
+                        window.location.href = "{{ route('search') }}?keyword={{$keyword}}&img_search=" + img_search + "&color=" + color;
+                    },
+                    error: function (response) {
+                        alert('Terjadi kesalahan saat mengunggah gambar.');
+                    },
+                    complete: function () {
+                        $("#btnSearch").prop('disabled', false);
+                    }
+                });
+            });
+        });
     </script>
 @endpush
