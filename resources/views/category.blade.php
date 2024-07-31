@@ -12,16 +12,26 @@
         </nav>
 
         <div class="row">
-            <div class="col-12 col-md-6">
-                <form method="POST" id="uploadForm" enctype="multipart/form-data" autocomplete="off">
-                    <div class="mb-3">
-                        <img id="preview" src="{{ $img_search }}" alt="Pratinjau Gambar" style="max-width:200px; max-height:200px;" />
+            <div class="col-md-12">
+                <div class="d-flex justify-content-between align-items-center">
+                    <form method="POST" id="uploadForm" enctype="multipart/form-data" autocomplete="off">
+                        <div class="mb-3">
+                            <img id="preview" src="{{ $img_search }}" alt="Pratinjau Gambar" style="max-width:200px; max-height:200px;" />
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="file" class="form-control" required name="file" id="file" accept="image/*" onchange="previewImage(event)" />
+                            <button id="btnSearch" class="btn btn-outline-secondary" type="submit">Cari</button>
+                        </div>
+                    </form>
+
+                    <div>
+                        <select class="form-select" onchange="sortImage(this.value)">
+                            <option value="new" {{ $sort == 'new' ? 'selected' : '' }}>Terbaru</option>
+                            <option value="old" {{ $sort == 'old' ? 'selected' : '' }}>Terlama</option>
+                            <option value="popular" {{ $sort == 'popular' ? 'selected' : '' }}>Like terbanyak</option>
+                        </select>
                     </div>
-                    <div class="input-group mb-3">
-                        <input type="file" class="form-control" required name="file" id="file" accept="image/*" onchange="previewImage(event)" />
-                        <button id="btnSearch" class="btn btn-outline-secondary" type="submit">Cari</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
 
@@ -41,9 +51,9 @@
                     <div class="card card-image rounded-3">
                         <img src="{{ asset('storage/uploads/' . $i->file) }}" class="card-img-top rounded-top-3" />
                         <div class="card-body border-top">
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-top">
                                 <h5 class="title-image mb-0">{{ $i->title }}</h5>
-                                <div>
+                                <div class="d-flex justify-between gap-1">
                                     <a class="btn btn-light" href="{{ route('download', $i) }}">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cloud-arrow-down" viewBox="0 0 16 16">
                                             <path fill-rule="evenodd" d="M7.646 10.854a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 9.293V5.5a.5.5 0 0 0-1 0v3.793L6.354 8.146a.5.5 0 1 0-.708.708z"/>
@@ -111,6 +121,20 @@
             });
         }
 
+        var img_search = "{{ $img_search }}";
+        var color = "{{ $color }}";
+
+        function sortImage(sort) {
+            var directUrl = "{{ route('category', $category->slug) }}";
+            if (img_search != "#") {
+                directUrl = directUrl + "?img_search=" + img_search + "&color=" + color + "&sort=" + sort;
+            } else {
+                directUrl = directUrl + "?sort=" + sort;
+            }
+
+            window.location.href = directUrl;
+        }
+
         $(document).ready(function () {
             $('#uploadForm').on('submit', function (e) {
                 e.preventDefault();
@@ -126,10 +150,10 @@
                         $("#btnSearch").prop('disabled', true);
                     },
                     success: function (response) {
-                        var img_search = response.img_search;
-                        var color = response.color;
+                        img_search = response.img_search;
+                        color = response.color;
 
-                        window.location.href = "{{ route('category', $category->slug) }}?img_search=" + img_search + "&color=" + color;
+                        window.location.href = "{{ route('category', $category->slug) }}?img_search=" + img_search + "&color=" + color + "&sort=new";
                     },
                     error: function (response) {
                         alert('Terjadi kesalahan saat mengunggah gambar.');

@@ -25,6 +25,7 @@ class HomeController extends Controller
     {
         $color = $request->color;
         $img_search = $request->img_search;
+        $sort = $request->sort ?? 'new';
 
         if ($img_search) {
             $img_search = asset('storage/uploads/temp/' . $img_search);
@@ -38,12 +39,22 @@ class HomeController extends Controller
             ->when($color, function ($query) use ($color) {
                 return $query->where('color', $color);
             })
-            ->get();
+            ->when($sort == 'new', function ($query) {
+                return $query->orderBy('created_at', 'desc');
+            })
+            ->when($sort == 'old', function ($query) {
+                return $query->orderBy('created_at', 'asc');
+            })
+            ->when($sort == 'popular', function ($query) {
+                return $query->withCount('favouriteImages')->orderBy('favourite_images_count', 'desc');
+            })->get();
 
         return view('category', [
             'category' => $category,
             'images' => $images,
-            'img_search' => $img_search
+            'color' => $color,
+            'img_search' => $img_search,
+            'sort' => $sort
         ]);
     }
 
@@ -52,6 +63,7 @@ class HomeController extends Controller
         $keyword = $request->keyword;
         $color = $request->color;
         $img_search = $request->img_search;
+        $sort = $request->sort ?? 'new';
 
         if ($img_search) {
             $img_search = asset('storage/uploads/temp/' . $img_search);
@@ -65,12 +77,23 @@ class HomeController extends Controller
             ->when($color, function ($query) use ($color) {
                 return $query->where('color', $color);
             })
+            ->when($sort == 'new', function ($query) {
+                return $query->orderBy('created_at', 'desc');
+            })
+            ->when($sort == 'old', function ($query) {
+                return $query->orderBy('created_at', 'asc');
+            })
+            ->when($sort == 'popular', function ($query) {
+                return $query->withCount('favouriteImages')->orderBy('favourite_images_count', 'desc');
+            })
             ->get();
 
         return view('search', [
             'keyword' => $keyword,
             'images' => $images,
-            'img_search' => $img_search
+            'color' => $color,
+            'img_search' => $img_search,
+            'sort' => $sort
         ]);
     }
 
