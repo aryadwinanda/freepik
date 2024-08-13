@@ -7,6 +7,9 @@ use Symfony\Component\Process\Process;
 
 Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+Route::get('register', [App\Http\Controllers\RegisterController::class, 'index'])->name('register');
+Route::post('register', [App\Http\Controllers\RegisterController::class, 'register'])->name('register.post');
+
 Route::get('login', [App\Http\Controllers\LoginController::class, 'index'])->name('login');
 Route::post('login', [App\Http\Controllers\LoginController::class, 'login'])->name('login.post');
 // logout
